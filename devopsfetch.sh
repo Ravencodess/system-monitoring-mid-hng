@@ -82,11 +82,23 @@ handle_port_details() {
 # Function to display Nginx configured domains
 handle_nginx() {
     echo "Displaying Nginx Configured Domains"
-    echo -e "\tCONF PATH\t\t\t\tDOMAIN\t\t\t\t\tURL"
-    # grep -E "\bserver_name\b" /etc/nginx/nginx.conf | column -t
-    grep -E "\bserver_name\b|\bproxy_pass\b" /etc/nginx/sites-enabled/* | awk '
-    /server_name/ {file=$1; gsub(/:$/, "", file); domain=$3; gsub(/;$/, "", domain)}
-    /proxy_pass/ {url=$3; gsub(/;$/, "", url); print file, domain, url}' | sort | uniq | column -t
+    # grep -E "\bserver_name\b|\bproxy_pass\b" /etc/nginx/sites-enabled/* | awk '
+    # /server_name/ {file=$1; gsub(/:$/, "", file); domain=$3; gsub(/;$/, "", domain)}
+    # /proxy_pass/ {url=$3; gsub(/;$/, "", url); print file, domain, url}' | sort | uniq | column -t
+    COLUMN1_WIDTH=40
+    COLUMN2_WIDTH=40
+
+    # Print the header
+    printf "%-${COLUMN1_WIDTH}s %-${COLUMN2_WIDTH}s %s\n" "Server Domain" "PROXY" "Configuration File"
+    printf "%-${COLUMN1_WIDTH}s %-${COLUMN2_WIDTH}s %s\n" "-------------" "----------" "------------------"
+
+    # Loop through configuration files and print details
+    for file in /etc/nginx/sites-enabled/*; do
+        server_name=$(grep -m 1 'server_name' "$file" | awk '{print $2}' | sed 's/;//')
+        proxy_pass=$(grep -m 1 'proxy_pass' "$file" | awk '{print $2}' | sed 's/;//')
+        printf "%-${COLUMN1_WIDTH}s %-${COLUMN2_WIDTH}s %s\n" "$server_name" "$proxy_pass" "$file"
+    done
+
 }
 
 # Function to Provide detailed configuration information for a specific domain
