@@ -1,5 +1,3 @@
-Here's the README in Markdown format without code blocks:
-
 # System Monitoring Tool
 
 This project provides a comprehensive system monitoring tool that tracks user logins, listening ports, Docker containers, and Nginx configurations. It includes scripts for installing dependencies, running the monitoring tool, and setting up a system service for continuous monitoring.
