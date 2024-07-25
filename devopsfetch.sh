@@ -122,7 +122,7 @@ handle_docker() {
 handle_docker_details() {
     local container_or_image="$1"
     echo "Displaying details for $container_or_image"
-    docker inspect prod-next-prod-frontend-2-1 | jq '.[] | {Name: .Name, State: .State, Config: .Config}'
+    docker inspect container_or_image | jq '.[] | {Name: .Name, State: .State, Config: .Config}'
 }
 
 # Function to display system logs based on a specific date or date range
